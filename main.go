@@ -20,12 +20,30 @@ func main() {
 - path: /urlshort-final
   url: https://github.com/gophercises/urlshort/tree/solution
 `
-	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
+	yamlHandler, err := urlshort.GeneralHandler("yaml", []byte(yaml), mapHandler)
 	if err != nil {
 		panic(err)
 	}
+
+	json := `[
+		{
+			"path": "/mygithub",
+			"url": "https://github.com/krsarmiento"
+		},
+		{
+			"path": "/mytwitter",
+			"url": "https://twitter.com/krsarmiento"
+		}
+	]
+	`
+
+	jsonHandler, err := urlshort.GeneralHandler("json", []byte(json), yamlHandler)
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println("Starting the server on :7000")
-	http.ListenAndServe(":7000", yamlHandler)
+	http.ListenAndServe(":7000", jsonHandler)
 }
 
 func defaultMux() *http.ServeMux {
