@@ -17,7 +17,7 @@ func main() {
 	http.ListenAndServe(":7000", mapHandler)
 }
 
-func defaultMux() *http.ServeMux{
+func defaultMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hello)
 	return mux
