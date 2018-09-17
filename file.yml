@@ -1,0 +1,4 @@
+- path: /yaml
+  url: https://es.wikipedia.org/wiki/YAML
+- path: /json
+  url: https://es.wikipedia.org/wiki/JSON

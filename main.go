@@ -1,12 +1,18 @@
 package main
 
 import (
+	"io/ioutil"
+	"flag"
 	"fmt"
-	"url-shortener-golang/urlshort"
 	"net/http"
+	"url-shortener-golang/urlshort"
 )
 
 func main() {
+	ymlFlag := flag.String("yml", "file.yml", "yml file with paths")
+	jsonFlag := flag.String("json", "file.json", "json file with paths")
+	flag.Parse()
+
 	mux := defaultMux()
 	pathsToUrls := map[string]string {
 		"/urlshort-godoc": "https://godoc.org/github.com/gophercises/urlshort",
@@ -14,29 +20,19 @@ func main() {
 	}
 	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 
-	yaml := `
-- path: /urlshort
-  url: https://github.com/gophercises/urlshort
-- path: /urlshort-final
-  url: https://github.com/gophercises/urlshort/tree/solution
-`
+	yaml, err := ioutil.ReadFile(*ymlFlag)
+	if (err != nil) {
+		panic(err)
+	}
 	yamlHandler, err := urlshort.GeneralHandler("yaml", []byte(yaml), mapHandler)
 	if err != nil {
 		panic(err)
 	}
 
-	json := `[
-		{
-			"path": "/mygithub",
-			"url": "https://github.com/krsarmiento"
-		},
-		{
-			"path": "/mytwitter",
-			"url": "https://twitter.com/krsarmiento"
-		}
-	]
-	`
-
+	json, err := ioutil.ReadFile(*jsonFlag)
+	if (err != nil) {
+		panic(err)
+	}
 	jsonHandler, err := urlshort.GeneralHandler("json", []byte(json), yamlHandler)
 	if err != nil {
 		panic(err)
